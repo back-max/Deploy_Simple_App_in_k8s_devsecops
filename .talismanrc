@@ -1,0 +1,12 @@
+fileignoreconfig:
+- filename: backend/.env.example
+  checksum: efac011fe8518e09d3aed7e48459f48485a1fda56300773cbf417c513bb20fa6
+- filename: mongo/manifests/configmap.yaml
+  checksum: 1029442cd758a80fca81fd737430618a966b3a823169b6be5c388065b17973fa
+- filename: mongo/manifests/statefulset.yaml
+  checksum: bca138d8631084f773dad5a0473ac623a97d2323c73cffbc99278785b94e268d
+- filename: backend/manifests/deployment.yaml
+  checksum: b9e364063dbf75336af4852138c4f71d1e3ae60ab8b0d8c7d4d53a34ab879412
+- filename: README.md
+  checksum: 84c239147169bacbaf5548bf762a0f04d7b30b6af9203dcc9a386b2e759c566f
+version: "1.0"

@@ -1,29 +1,36 @@
-FROM node:20-alpine
+FROM node:20.19.5-alpine3.22 AS builder
 
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Set working directory
+
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install --omit=dev
 
-# Copy the rest of the app
-COPY --chown=appuser:appgroup . .
+# Copy all packages
+COPY  . .
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
-# Create writable cache before switching user
-RUN mkdir -p /app/node_modules/.cache && chmod -R 777 /app/node_modules/.cache
 
-# Switch to non-root user
-USER appuser
+# Install all workspace dependencies from root
+RUN npm install 
 
 
-# Expose the port your app runs on
-EXPOSE 3000
+RUN npm run build  
 
-# Start the app
-CMD ["npm", "start"]
+# Production stage
+FROM nginxinc/nginx-unprivileged:alpine3.22-slim
+
+# Copy the built frontend from builder stage
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Create nginx config for SPA routing
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+
+
+
+
+
